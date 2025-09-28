@@ -1,0 +1,69 @@
+## Project Overview: What Are We Building?
+
+You're going to build a program that takes a file as input and creates a new, smaller file containing the same information.
+
+You'll also build the functionality to take this new compressed file and restore it to its original form. Think of it like a digital suitcase: you're packing your data more efficiently to save space.
+
+This tool will run entirely from the command line, just like standard system utilities such as cp (copy) or mv (move). For example:
+
+To compress: $./mycompress -c report.txt compressed_report.huff
+
+To decompress: $./mycompress -d compressed_report.huff original_report.txt
+
+The core of this project is implementing the Huffman Coding algorithm, a clever method for lossless data compression.
+
+
+
+## Technology and Tools :
+
+
+The beauty of this project is its simplicity and focus. You don't need fancy frameworks or external dependencies.
+
+Language: C. That's it. We'll be using standard C features.
+
+Compiler: A standard C compiler like GCC (GNU Compiler Collection) or Clang. If you're on Windows, you can use MinGW or WSL (Windows Subsystem for Linux) to get GCC.
+
+Core Libraries: You'll only need the C Standard Library. No external downloads are required. The key header files you'll use are:
+
+stdio.h: For all file input/output operations (fopen, fgetc, fwrite, printf, etc.).
+
+stdlib.h: For dynamic memory allocation (malloc, free, exit).
+
+string.h: For string manipulation if needed (strcpy, strlen).
+
+Text Editor/IDE: Any you prefer, such as VS Code, Sublime Text, Vim, or a simple editor like Notepad++.
+
+Terminal/Command Line: You will compile and run your program from here.
+
+
+
+## The Core Logic: Huffman Coding Explained Simply
+
+Imagine you have the text "go go gophers".
+
+The standard way to store this (ASCII) uses 8 bits for every character. But some characters appear more often than others. The idea behind Huffman Coding is: give shorter codes to frequent characters and longer codes to rare characters.
+
+Analyze Frequencies: First, count how many times each character appears.
+
+g: 3
+o: 3
+ : 2 (space)
+p: 1
+h: 1
+e: 1
+r: 1
+s: 1
+
+Build a Tree: You then build a special binary tree based on these frequencies. The characters with the lowest frequencies end up at the bottom, furthest from the root.
+
+This tree structure automatically generates the optimal codes. To find a character's code, you just trace the path from the root, recording a 0 for a left turn and a 1 for a right turn.
+
+Generate Codes & Encode: Based on a possible tree for our example, the codes might look like this:
+
+g: 11 (frequent, short code)
+o: 10 (frequent, short code)
+ : 00
+
+...and so on for the others, which would get longer codes.
+
+Now, instead of writing 8 bits for each character, you write its shorter Huffman code. This is where the file size reduction comes from.
