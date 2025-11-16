@@ -3,6 +3,8 @@
 NanoZip is a command-line based lossless file compression & decompression utility built entirely in C, using the Huffman Coding Algorithm.
 Think of it as a tiny version of ZIP/GZIP — but handcrafted from scratch with no external libraries.
 
+
+
 🚀 Features
 
 ⚡ Fast file compression using Huffman Coding
@@ -17,6 +19,8 @@ Think of it as a tiny version of ZIP/GZIP — but handcrafted from scratch with 
 
 💻 Works on Linux, Windows (MinGW), and macOS
 
+
+
 📂 Project Structure
 NanoZip/
 │
@@ -29,6 +33,8 @@ NanoZip/
 │
 ├── Makefile        # To build project easily
 └── README.md
+
+
 
 🔍 How It Works (Short Explanation)
 
@@ -46,6 +52,8 @@ Stores the frequency table in the file header
 
 During decompression, rebuilds the exact same Huffman Tree and restores the original file
 
+
+
 🧵 Build Instructions
 🔧 Compile
 
@@ -57,6 +65,8 @@ gcc -o NanoZip.exe main.c huffman.c heap.c -Wall -g
 Or simply run:
 
 make
+
+
 
 🗜️ Usage
 1️⃣ Compress a File
@@ -97,6 +107,8 @@ Implements a min-heap priority queue
 
 Used to efficiently build the Huffman Tree
 
+
+
 📝 Example
 
 Original (Sample.txt):
@@ -108,6 +120,8 @@ Compressed using Huffman Codes → much smaller binary file
 Decompressed → exact same original content
 
 Lossless. Efficient. Simple.
+
+
 
 ❤️ Why This Project?
 
@@ -122,6 +136,8 @@ Bitwise operations
 Implementing a real-world algorithm from scratch
 
 Writing modular C programs
+
+
 
 📜 License
 
