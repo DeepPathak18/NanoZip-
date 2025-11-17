@@ -206,3 +206,5 @@ To Decompress the Program : NanoZip -d compressed.huff original.txt
 
 --> here compressed.huff is main file after running above command it will Decompressed and make original.txt file (we can change our Decompressed file name also)
 
+Main Output : To get Use more .txt file beacause PDF , Image and Video that kind of file is already some how compressed so don't try it more 
+                compress if you do this then the file has become more larger..

@@ -1,0 +1,73 @@
+-->  Project Not to get efiicient result due to Header file making for Tree...
+## 🎯 The Core Problem: Overhead
+Your program is compressing the data, but it's also adding a "dictionary" to the beginning of the file so the decompressor knows how to rebuild the tree.
+
+In your compressFile function, this is your header:
+
+fwrite(&size, sizeof(int), 1, outFile); (e.g., 4 bytes)
+
+fwrite(data, sizeof(char), size, outFile); (1 byte * number of unique chars)
+
+fwrite(unique_freq, sizeof(int), size, outFile); (4 bytes * number of unique chars)
+
+fwrite(&file_len, sizeof(long long), 1, outFile); (e.g., 8 bytes)
+
+Let's do the math: Imagine you compress a small text file that uses 100 different unique characters.
+
+Your header size will be: 4 + (1 * 100) + (4 * 100) + 8 = 512 bytes.
+
+Your compressed file will always be at least 512 bytes larger than the actual compressed data. If your file is small (like 1KB or 2KB), this 512-byte header can easily wipe out any savings you got from compression, making the final file larger.
+
+## 🤔 When Compression Fails
+This "overhead" problem is why lossless compression (like Huffman, ZIP, PNG) can make files bigger in two main scenarios:
+
+Small Files: The header/dictionary is larger than the data savings. This is most likely what you are seeing in your tests.
+
+Random or Pre-Compressed Data: If a file has no pattern (like random noise, or an encrypted file), all characters have roughly the same frequency. Huffman coding can't find an advantage, so the best it can do is ~8 bits per character... plus the header. (Trying to "zip" a .zip, .jpg, or .mp3 file will almost always make it bigger).
+
+## 💡 How to Improve Your Project
+Your algorithm is correct, but your header is inefficient. Storing the full frequency table is simple, but it's very large.
+
+A much more efficient method is to store the Huffman Tree structure itself.
+
+1. The Strategy
+Instead of writing the frequencies, you can write the tree's shape. You do this with a pre-order traversal of your finished Huffman tree.
+
+When you visit an internal node (like your '$' nodes), write a single 0 bit.
+
+When you visit a leaf node (a node with a real character), write a single 1 bit, followed by the 8 bits of the character itself (e.g., (char)root->data).
+
+2. Example
+Imagine a simple tree:
+
+      $ (internal)
+     / \
+    /   \
+'A' (leaf)   $ (internal)
+           / \
+          /   \
+      'B' (leaf) 'C' (leaf)
+Your pre-order traversal would write these bits to the header:
+
+0 (for the root $)
+
+1 (for leaf 'A') followed by 01000001 (the bits for 'A')
+
+0 (for the second $)
+
+1 (for leaf 'B') followed by 01000010 (the bits for 'B')
+
+1 (for leaf 'C') followed by 01000011 (the bits for 'C')
+
+Total header: 0 1 01000001 0 1 01000010 1 01000011 This is only 5 bits for the structure + 3 * 8 = 24 bits for the characters = 29 bits. This is vastly smaller than storing the frequencies.
+
+3. How to Decompress
+Your decompressFile function would first read this bitstream to rebuild the tree exactly as it was.
+
+Read 1 bit.
+
+If it's 0, create an internal node and recursively call the function to build its left child, then recursively call it to build its right child.
+
+If it's 1, read the next 8 bits to get the character, create a leaf node with that character, and return it.
+
+Once the tree is rebuilt, the rest of your decompression logic (reading the data and walking the tree) stays exactly the same.
